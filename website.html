@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>For You ❤️</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: linear-gradient(to right, #ff9a9e, #fecfef);
+    color:white;
+    text-align:center;
+    overflow:hidden;
+}
+
+/* Intro */
+#introScreen {
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:black;
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:28px;
+    z-index:9999;
+}
+
+/* Pages */
+.page {display:none; padding-top:100px;}
+.active {display:block;}
+
+button {
+    padding:10px 20px;
+    border:none;
+    border-radius:15px;
+    margin:10px;
+    cursor:pointer;
+}
+
+.backBtn {position:absolute; top:20px; left:20px;}
+#noBtn {position:absolute;}
+
+/* 💬 Chat UI with scroll */
+#chatBox {
+    width:90%;
+    max-width:400px;
+    height:400px;
+    margin:auto;
+    text-align:left;
+    overflow-y:auto;
+    padding:10px;
+    box-sizing:border-box;
+}
+
+/* Blue messages */
+.msg {
+    background:#0b93f6;
+    color:white;
+    padding:10px;
+    border-radius:15px;
+    margin:10px 0;
+    width:fit-content;
+}
+
+/* Reply */
+.reply {
+    background:#e5e5ea;
+    color:black;
+    padding:10px;
+    border-radius:15px;
+    margin:10px 0;
+    margin-left:auto;
+    width:fit-content;
+}
+
+#typing {
+    display:none;
+    font-size:14px;
+    opacity:0.7;
+}
+
+/* Hearts */
+.heart {
+    position:fixed;
+    bottom:-10px;
+    animation:floatUp 5s linear infinite;
+}
+@keyframes floatUp {
+    100% {transform:translateY(-100vh); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- Intro -->
+<div id="introScreen"><h1 id="introText"></h1></div>
+
+<!-- Page1 -->
+<div id="page1" class="page active">
+<h1 id="welcomeText">Hey cute girl❤️</h1>
+<button onclick="nextPage(2)">Click if you are a girl 😅</button>
+</div>
+
+<!-- Page2 CHAT -->
+<div id="page2" class="page">
+<button class="backBtn" onclick="nextPage(1)">⬅</button>
+
+<div id="chatBox"></div>
+<div id="typing">typing...</div>
+
+<button id="nextBtn" style="display:none;" onclick="checkPassword()">Continue ❤️</button>
+</div>
+
+<!-- Page4 -->
+<div id="page4" class="page">
+<button class="backBtn" onclick="nextPage(2)">⬅</button>
+<h1 id="finalText"></h1>
+
+<button onclick="yesClicked()">Kandipaa 💖</button>
+<button id="noBtn">NO 😏</button>
+</div>
+
+<script>
+
+// Intro
+let intro=["Every story has a beginning...",
+"But somehow it has some misunderstanding and it misleads...",
+"Now i need sometime to correct my mistakes...",
+"I need a last chance...",];
+let i=0,c=0;
+function type(){
+let t=intro[i];
+introText.innerHTML=t.substring(0,c++);
+if(c<=t.length)setTimeout(type,50);
+else{c=0;i++; if(i<intro.length)setTimeout(type,800);
+else introScreen.style.display="none";}
+}
+window.onload=type;
+
+// Name
+let herName=prompt("Enter your name ❤️");
+welcomeText.innerHTML="Hey "+herName;
+finalText.innerHTML=herName+", enkuda epome irupiyaa? 💍";
+
+// Navigation
+function nextPage(p){
+document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));
+document.getElementById("page"+p).classList.add("active");
+
+if(p===2) startChat();
+}
+
+// Scroll function
+function scrollToBottom(){
+    let box = document.getElementById("chatBox");
+    box.scrollTop = box.scrollHeight;
+}
+
+// Chat
+let chatFlow=[
+{text:"Hey...",reply:"Hey 🙂"},
+{text:"I wanted to tell you something...",reply:"What 👀"},
+{text:"From the day I met you...",reply:""},
+{text:"Everything changed...",reply:"Aww 🥺"},
+{text:"You became my happiness...",reply:""},
+{text:"My safe place...",reply:""},
+{text:"I can’t imagine life without you ❤️",reply:"🥺❤️"},
+{text:"I need you 🥺🥺",reply:""}
+];
+
+let ci=0;
+
+function startChat(){
+chatBox.innerHTML="";
+nextBtn.style.display="none";
+ci=0;
+sendMsg();
+}
+
+function sendMsg(){
+if(ci>=chatFlow.length){
+nextBtn.style.display="block";
+return;
+}
+
+let m=document.createElement("div");
+m.className="msg";
+m.innerHTML=chatFlow[ci].text+" ✓✓";
+chatBox.appendChild(m);
+scrollToBottom();
+
+let reply=chatFlow[ci].reply;
+ci++;
+
+if(reply){
+typing.style.display="block";
+
+setTimeout(()=>{
+typing.style.display="none";
+
+let r=document.createElement("div");
+r.className="reply";
+r.innerText=reply;
+chatBox.appendChild(r);
+scrollToBottom();
+
+setTimeout(sendMsg,1000);
+},1200);
+
+}else{
+setTimeout(sendMsg,1000);
+}
+}
+
+// YES
+function yesClicked(){
+document.body.innerHTML="<h1>I love you the most "+herName+" ❤️</h1>";
+}
+
+// NO button
+let no=document.getElementById("noBtn"),size=16;
+no.onmouseover=()=>{
+no.style.left=Math.random()*window.innerWidth+"px";
+no.style.top=Math.random()*window.innerHeight+"px";
+size-=2;if(size>6)no.style.fontSize=size+"px";
+};
+
+// Hearts
+setInterval(()=>{
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="💖";
+h.style.left=Math.random()*100+"vw";
+document.body.appendChild(h);
+setTimeout(()=>h.remove(),5000);
+},300);
+
+// Password
+let unlocked=false,attempts=0;
+
+function checkPassword(){
+if(unlocked){nextPage(4);return;}
+
+let p=prompt("Enter password 👀");
+if(p){
+p=p.trim().toLowerCase();
+
+if(p==="apartment"){ // CHANGE HERE
+unlocked=true;
+nextPage(4);
+}else{
+attempts++;
+if(attempts<3){
+alert("Wrong 😏\nHint: Where was the first kiss I gave you,name of the place?");
+}else{
+alert("Okay 😌 showing...");
+unlocked=true;
+nextPage(4);
+}
+}
+}
+}
+
+</script>
+
+</body>
+</html>
